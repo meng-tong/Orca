@@ -1,11 +1,11 @@
-if [ $# -eq 1 ]
+if [ $# -eq 2 ]
 then
     source setup.sh
     first_time=4
     port_base=$1
 
     max_steps=500000
-    eval_duration=30
+    eval_duration=$2
     num_actors=1
     epoch=20
     memory_size=$((max_steps*num_actors))
@@ -58,6 +58,6 @@ then
         sudo killall -s15 client
     done
 else
-    echo "usage: $0 [base port number]"
+    echo "usage: $0 [base port number] [duration]"
 fi
 
