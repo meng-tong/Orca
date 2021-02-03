@@ -1,4 +1,4 @@
-if [ $# -eq 2 ]
+if [ $# -eq 3 ]
 then
     source setup.sh
     first_time=4
@@ -6,7 +6,7 @@ then
 
     max_steps=500000
     eval_duration=$2
-    num_actors=1
+    num_actors=$3
     epoch=20
     memory_size=$((max_steps*num_actors))
 
@@ -36,13 +36,16 @@ then
     #qs=1000
     #eval_duration=60
 
-    ./actor.sh ${act_port} $epoch ${first_time} $scheme_ $dir $act_id $downl $upl $del $eval_duration $qs 0 &
-    pids="$pids $!"
+    for iactor in $(seq ${num_actors})
+    do
+      ./actor.sh ${act_port} $epoch ${first_time} $scheme_ $dir $act_id $downl $upl $del $eval_duration $qs 0 &
+      pids="$pids $!"
 
-    #in case you need more actors: increase number actor's id and port. and run actor.sh again ...
-    #act_id=$((act_id+1))
-    #act_port=$((port_base+act_id))
-    #sleep 2
+      #in case you need more actors: increase number actor's id and port. and run actor.sh again ...
+      act_id=$((act_id+1))
+      act_port=$((port_base+act_id))
+      sleep 2
+    done
 
     #Wait for them ...
     for pid in $pids
